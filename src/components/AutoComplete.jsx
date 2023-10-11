@@ -9,10 +9,16 @@ const AutoComplete = () => {
     const handleChange = (e) => setQueryText(e.target.value)
 
     const reset = () => {
-        // setSearchResults([])
+        if(queryText){
+            return
+        }
+        
+        setQueryText('')
+        setSearchResults([])
     }
 
-    const selectItem = (query) => {
+    const selectItem = (e, query) => {
+        e.preventDefault()
         setQueryText(query)
         setSearchResults([])
     }
@@ -36,9 +42,21 @@ const AutoComplete = () => {
     }, [queryText])
 
     const exactMatch = (query, text) => {
-        const regex = new RegExp(`^${query}`);
-        return regex.test(text);
-    };
+        const regex = new RegExp(`^${query}`)
+        return regex.test(text)
+    }
+
+    const handleKeyDown = (e) => {
+        if(queryText){
+            if (e.key === "Tab" || e.key === "Enter") {
+                e.preventDefault()
+                if(exactMatch(queryText, searchResults[0].item.city)){
+                    setQueryText(`${searchResults[0].item.city}, ${searchResults[0].item.state_id}`)
+                }
+                setSearchResults([])
+            }
+        }
+    }
 
   return (
     <div className="py-8 flex flex-col items-center justify-center">
@@ -49,7 +67,8 @@ const AutoComplete = () => {
             type="search"
             value={queryText}
             onChange={handleChange}
-            onBlur={reset}
+            onKeyDown={handleKeyDown}
+            onBlurCapture={reset}
             placeholder="Search by city name or zip code"
             className="text-lg text-black w-1/5 border-b-2 outline-none border-b-indigo-300 focus:border-b-indigo-700"
             />
@@ -73,7 +92,7 @@ const AutoComplete = () => {
                     {searchResults?.map((place) => (
                     <li 
                     key={place.item.id}
-                    onClick={() => selectItem(`${place.item.city}, ${place.item.state_id}`)}
+                    onClick={(e) => selectItem(e, `${place.item.city}, ${place.item.state_id}`)}
                     className="p-2 text-slate-800 transition-all duration-300 ease-in-out hover:bg-slate-200 border-b-2 border-b-indigo-200 cursor-pointer"
                     >
                         {`${place.item.city}, ${place.item.state_id}, ${place.item.county_fips}`}
