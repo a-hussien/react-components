@@ -1,7 +1,8 @@
+import Tiptap from "../components/Tiptap"
 
 const TextEditorPage = () => {
   return (
-    <div>TextEditorPage</div>
+    <Tiptap />
   )
 }
 
