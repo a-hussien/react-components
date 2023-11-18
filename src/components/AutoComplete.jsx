@@ -59,9 +59,7 @@ const AutoComplete = () => {
     }
 
   return (
-    <div className="py-8 flex flex-col items-center justify-center">
-        <h1 className="text-3xl text-indigo-500">US Places Autocomplete</h1>
-
+    <>
         <div className="mt-16 relative w-full flex items-center justify-center">
             <input
             type="search"
@@ -84,8 +82,7 @@ const AutoComplete = () => {
             }
 
         </div>
-
-            {/* AutoComplete List */}
+        {/* AutoComplete List */}
         <div className="w-1/5">
             {searchResults.length > 0 && (
                 <ul className="bg-slate-100 list-none p-2">
@@ -101,7 +98,7 @@ const AutoComplete = () => {
                 </ul>
             )}
         </div>
-    </div>
+    </>
   )
 }
 
