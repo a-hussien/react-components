@@ -1,8 +1,8 @@
 import { EditorProvider, useCurrentEditor } from '@tiptap/react';
-import { Color } from '@tiptap/extension-color'
-import TextStyle from '@tiptap/extension-text-style'
-import ListItem from '@tiptap/extension-list-item'
-import StarterKit from '@tiptap/starter-kit'
+import { Color } from '@tiptap/extension-color';
+import TextStyle from '@tiptap/extension-text-style';
+import ListItem from '@tiptap/extension-list-item';
+import StarterKit from '@tiptap/starter-kit';
 
 const MenuBar = () => {
     const { editor } = useCurrentEditor()
@@ -52,31 +52,14 @@ const MenuBar = () => {
         >
           strike
         </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCode().run()}
-          disabled={
-            !editor.can()
-              .chain()
-              .focus()
-              .toggleCode()
-              .run()
-          }
-          className={editor.isActive('code') ? 'font-bold' : ''}
-        >
-          code
-        </button>
-        <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-          clear marks
-        </button>
-        <button onClick={() => editor.chain().focus().clearNodes().run()}>
-          clear nodes
-        </button>
+        
         <button
           onClick={() => editor.chain().focus().setParagraph().run()}
           className={editor.isActive('paragraph') ? 'font-bold' : ''}
         >
           paragraph
         </button>
+
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className={editor.isActive('heading', { level: 1 }) ? 'font-bold' : ''}
@@ -113,6 +96,7 @@ const MenuBar = () => {
         >
           h6
         </button>
+
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={editor.isActive('bulletList') ? 'font-bold' : ''}
@@ -125,24 +109,22 @@ const MenuBar = () => {
         >
           ordered list
         </button>
-        <button
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-          className={editor.isActive('codeBlock') ? 'font-bold' : ''}
-        >
-          code block
-        </button>
+
         <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={editor.isActive('blockquote') ? 'font-bold' : ''}
         >
           blockquote
         </button>
+
         <button onClick={() => editor.chain().focus().setHorizontalRule().run()}>
           horizontal rule
         </button>
-        <button onClick={() => editor.chain().focus().setHardBreak().run()}>
+
+        <button onClick={() => editor.chain().focus().setHardBreak({keepMarks: true}).run()}>
           hard break
         </button>
+
         <button
           onClick={() => editor.chain().focus().undo().run()}
           disabled={
@@ -167,12 +149,34 @@ const MenuBar = () => {
         >
           redo
         </button>
+
         <button
-          onClick={() => editor.chain().focus().setColor('#958DF1').run()}
-          className={editor.isActive('textStyle', { color: '#958DF1' }) ? 'text-red-600' : ''}
+          onClick={() => editor.chain().focus().setColor('#235784').run()}
+          className={editor.isActive('textStyle', { color: '#235784' }) ? 'font-bold' : ''}
         >
-          purple
+          Primary
         </button>
+
+        <button
+          onClick={() => editor.chain().focus().setColor('#47a4c0').run()}
+          className={editor.isActive('textStyle', { color: '#47a4c0' }) ? 'font-bold' : ''}
+        >
+          Secondary
+        </button>
+
+        <input
+        type="color"
+        onInput={event => editor.chain().focus().setColor(event.target.value).run()}
+        value={editor.getAttributes('textStyle').color ?? "#000000"}
+        data-testid="setColor"
+        />
+        <button
+        onClick={() => editor.chain().focus().unsetColor().run()}
+        data-testid="unsetColor"
+        >
+        unsetColor
+        </button>
+        
       </div>
     )
   }
@@ -199,15 +203,19 @@ const MenuBar = () => {
     }
 
   
-  const content = `Start content here`;
+  const content = `Compose your content`;
 
-  export default () => {
+  export default ({ setContent }) => {
     return (
       <EditorProvider 
       slotBefore={<MenuBar />} 
       extensions={extensions} 
       content={content}
       editorProps={editorProps}
+      onUpdate={({ editor }) => {
+          const html = editor.getHTML();
+          setContent(html);
+      }}
       />
     )
   }
