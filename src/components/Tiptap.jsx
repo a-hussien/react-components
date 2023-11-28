@@ -3,10 +3,32 @@ import { Color } from '@tiptap/extension-color';
 import TextStyle from '@tiptap/extension-text-style';
 import ListItem from '@tiptap/extension-list-item';
 import StarterKit from '@tiptap/starter-kit';
+import Link from '@tiptap/extension-link';
+import { useCallback } from "react";
 
 const MenuBar = () => {
     const { editor } = useCurrentEditor()
-  
+
+    const setLink = useCallback(() => {
+      const previousUrl = editor.getAttributes('link').href
+      const url = window.prompt('URL', previousUrl)
+
+      // cancelled
+      if (url === null) {
+        return
+      }
+
+      // empty
+      if (url === '') {
+        editor.chain().focus().extendMarkRange('link').unsetLink().run()
+        return
+      }
+
+      // update link
+      editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+    
+    }, [editor])
+
     if (!editor) {
       return null
     }
@@ -53,6 +75,17 @@ const MenuBar = () => {
           strike
         </button>
         
+
+        <button onClick={setLink} className={editor.isActive('link') ? 'is-active' : ''}>
+          setLink
+        </button>
+        <button
+          onClick={() => editor.chain().focus().unsetLink().run()}
+          disabled={!editor.isActive('link')}
+        >
+          unsetLink
+        </button>
+
         <button
           onClick={() => editor.chain().focus().setParagraph().run()}
           className={editor.isActive('paragraph') ? 'font-bold' : ''}
@@ -184,6 +217,12 @@ const MenuBar = () => {
   const extensions = [
     Color.configure({ types: [TextStyle.name, ListItem.name] }),
     TextStyle.configure({ types: [ListItem.name] }),
+    Link.configure({
+      openOnClick: true,
+      HTMLAttributes: {
+        class: 'text-[#47a4c0] font-bold',
+      },
+    }),
     StarterKit.configure({
       bulletList: {
         keepMarks: true,
