@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AutoCompletePage from "./pages/AutoCompletePage";
 import TextEditorPage from "./pages/TextEditorPage";
-import DefaultLayout from "./Layoutes/DefaultLayout";
+import DefaultLayout from "./Layouts/DefaultLayout";
 
 const router = createBrowserRouter(
     [
