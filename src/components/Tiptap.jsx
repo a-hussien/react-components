@@ -241,10 +241,7 @@ const MenuBar = () => {
         },
     }
 
-  
-  const content = `Compose your content`;
-
-  export default ({ setContent }) => {
+  export default ({ content, setContent }) => {
     return (
       <EditorProvider 
       slotBefore={<MenuBar />} 
